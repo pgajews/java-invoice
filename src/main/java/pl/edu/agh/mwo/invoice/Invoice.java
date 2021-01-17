@@ -25,19 +25,19 @@ public class Invoice {
 
     public BigDecimal getSubtotal() {
         return this.products.entrySet().stream()
-            .map(p -> p.getKey().getPrice().multiply(BigDecimal.valueOf(p.getValue())))
+            .map(p -> p.getKey().getPrice().multiply(new BigDecimal(p.getValue())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTax() {
         return this.products.entrySet().stream()
-            .map(p -> p.getKey().getPrice().multiply(p.getKey().getTaxPercent()).multiply(BigDecimal.valueOf(p.getValue())))
+            .map(p -> p.getKey().getPrice().multiply(p.getKey().getTaxPercent()).multiply(new BigDecimal(p.getValue())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotal() {
         return this.products.entrySet().stream()
-            .map(p -> p.getKey().getPriceWithTax().multiply(BigDecimal.valueOf(p.getValue())))
+            .map(p -> p.getKey().getPriceWithTax().multiply(new BigDecimal(p.getValue())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
