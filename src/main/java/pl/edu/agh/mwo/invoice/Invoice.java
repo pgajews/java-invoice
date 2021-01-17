@@ -23,7 +23,7 @@ public class Invoice {
         this.products.put(product, quantity);
     }
 
-    public BigDecimal getSubtotal() {
+    public BigDecimal getNetPriceTotal() {
         return this.products.entrySet().stream()
             .map(p -> p.getKey().getPrice().multiply(new BigDecimal(p.getValue())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
