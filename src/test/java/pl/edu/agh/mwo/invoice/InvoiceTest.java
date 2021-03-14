@@ -1,6 +1,8 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -103,5 +105,31 @@ public class InvoiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testInvoiceWithNegativeQuantity() {
         invoice.addProduct(new DairyProduct("Zsiadle mleko", new BigDecimal("5.55")), -1);
+    }
+
+    @Test
+    public void testInvoiceHasNumber() {
+        long number = invoice.getNumber();
+        Assert.assertTrue(number > 0);
+    }
+
+    @Test
+    public void testTwoInvoicesHaveDifferentNumber() {
+        long number = invoice.getNumber();
+        long number2 = new Invoice().getNumber();
+        Assert.assertNotEquals(number, number2);
+    }
+
+    @Test
+    public void testTheSameInvoicesHasTheSameNumber() {
+        Assert.assertEquals(invoice.getNumber(), invoice.getNumber());
+    }
+
+    @Test
+    public void testNumberOfInvoiceIsStartingFromADate() {
+        String dateFrominvoice = String.valueOf(invoice.getNumber()).substring(0, 8);
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+        Assert.assertEquals(dateFrominvoice, formatter.format(date));
     }
 }
