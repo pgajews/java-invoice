@@ -2,15 +2,13 @@ package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
     private final long number = getNextInvoiceNumber();
+
     private Map<Product, Integer> products = new HashMap<Product, Integer>();
 
     public void addProduct(Product product) {
@@ -55,5 +53,19 @@ public class Invoice {
         SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
         String number = formatter.format(date) + Math.abs(new Random().nextInt());
         return Long.parseLong(number);
+    }
+
+    public Map<Product, Integer> getProducts() {
+        return products;
+    }
+
+    public List<String> printInvoice() {
+        List<String> printList = new ArrayList<>();
+        printList.add(String.valueOf(number));
+        for (Product product: products.keySet()) {
+            printList.add(product.getName() + "\t" + products.get(product) + "\t" + product.getPrice());
+        }
+        printList.add("Liczba pozycji: " + products.keySet().size());
+        return printList;
     }
 }

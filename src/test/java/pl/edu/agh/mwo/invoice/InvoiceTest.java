@@ -3,6 +3,7 @@ package pl.edu.agh.mwo.invoice;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -132,4 +133,52 @@ public class InvoiceTest {
         SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
         Assert.assertEquals(dateFrominvoice, formatter.format(date));
     }
+
+    @Test
+    public void testPrintStartsFromInvoiceNumber() {
+        long number = invoice.getNumber();
+        List<String> printingList = invoice.printInvoice();
+        Assert.assertEquals(String.valueOf(number), printingList.get(0));
+    }
+
+    @Test
+    public void testPrintHasProductNamesOnFirstPosition() {
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        List<String> printingList = invoice.printInvoice();
+        Assert.assertEquals("Owoce", printingList.get(1).split("\t")[0]);
+        System.out.println(printingList);
+    }
+
+    @Test
+    public void testPrintListHasAmountOfOrderedProductOnSecondPosition() {
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        List<String> printingList = invoice.printInvoice();
+        Assert.assertEquals(1, Long.parseLong(printingList.get(1).split("\t")[1]), 0);
+    }
+
+    @Test
+    public void testPrintListHasPriceOfOrderedProductOnTheThirdPosition() {
+        Product owoce = new TaxFreeProduct("Owoce", new BigDecimal("200"));
+        invoice.addProduct(owoce);
+        List<String> printingList = invoice.printInvoice();
+        Assert.assertEquals(owoce.getPrice().toString(), printingList.get(1).split("\t")[2]);
+    }
+
+    @Test
+    public void testPrintHasAmountOfProductsAtTheEnd() {
+        List<String> printingList = invoice.printInvoice();
+        Assert.assertEquals(0, Integer.parseInt(printingList.get(1).split(" ")[2]), 0);
+    }
+
+    @Test
+    public void testPrintHasAmountOfProductsAtTheEndWithThreeProducts() {
+        List<String> printingList = invoice.printInvoice();
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        invoice.addProduct(new DairyProduct("Maslanka", new BigDecimal("100")));
+        invoice.addProduct(new OtherProduct("Wino", new BigDecimal("10")));
+        String lastLine = invoice.printInvoice().get(4);
+        Assert.assertEquals(3, Integer.parseInt(lastLine.split(" ")[2]), 0);
+    }
+
+
 }
