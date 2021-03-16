@@ -19,6 +19,10 @@ public class Invoice {
         if (product == null || quantity <= 0) {
             throw new IllegalArgumentException();
         }
+        Integer existedProductAmount = products.get(product);
+        if (existedProductAmount != null) {
+            quantity = existedProductAmount + quantity;
+        }
         products.put(product, quantity);
     }
 
@@ -68,4 +72,6 @@ public class Invoice {
         printList.add("Liczba pozycji: " + products.keySet().size());
         return printList;
     }
+
+
 }

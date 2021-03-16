@@ -180,5 +180,28 @@ public class InvoiceTest {
         Assert.assertEquals(3, Integer.parseInt(lastLine.split(" ")[2]), 0);
     }
 
+    @Test
+    public void testCheckNotDoubledProducts() {
+        Product owoce = new TaxFreeProduct("Owoce", new BigDecimal("200"));
+        invoice.addProduct(owoce);
+        invoice.addProduct(owoce);
+        Assert.assertEquals(2, invoice.getProducts().get(owoce), 0);
+    }
+
+    @Test
+    public void testAddingSameProductsWithMoreQuantity() {
+        Product owoce = new TaxFreeProduct("Owoce", new BigDecimal("200"));
+        invoice.addProduct(owoce, 5);
+        invoice.addProduct(owoce);
+        Assert.assertEquals(6, invoice.getProducts().get(owoce), 0);
+    }
+
+    @Test
+    public void testAddingSameProductsWithMoreQuantity2() {
+        Product owoce = new TaxFreeProduct("Owoce", new BigDecimal("200"));
+        invoice.addProduct(owoce, 5);
+        invoice.addProduct(owoce, 10);
+        Assert.assertEquals(15, invoice.getProducts().get(owoce), 0);
+    }
 
 }
