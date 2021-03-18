@@ -10,11 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.Invoice;
-import pl.edu.agh.mwo.invoice.product.DairyProduct;
-import pl.edu.agh.mwo.invoice.product.OtherProduct;
-import pl.edu.agh.mwo.invoice.product.Product;
-import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
+import pl.edu.agh.mwo.invoice.product.*;
 
 public class InvoiceTest {
     private Invoice invoice;
@@ -204,4 +200,35 @@ public class InvoiceTest {
         Assert.assertEquals(15, invoice.getProducts().get(owoce), 0);
     }
 
+    @Test
+    public void testBottleOfWineHasExtraExcise() {
+        Product wine = new BottleOfWine("Red wine", new BigDecimal("0"));
+        Assert.assertThat(wine.getPriceWithTax(), Matchers.comparesEqualTo(new BigDecimal("5.56")));
+    }
+
+    @Test
+    public void testBottleOfWineAllTaxes() {
+        Product wine = new FuelCanister("Canister", new BigDecimal("100"), new Date());
+        Assert.assertThat(wine.getPriceWithTax(), Matchers.comparesEqualTo(new BigDecimal("128.56")));
+    }
+
+    @Test
+    public void testFuelCanisterHasExtraExcise() {
+        Product fuelCanister = new FuelCanister("Canister", new BigDecimal("0"), new Date());
+        Assert.assertThat(fuelCanister.getPriceWithTax(), Matchers.comparesEqualTo(new BigDecimal("5.56")));
+    }
+
+    @Test
+    public void testFuelCanisterAllTaxes() {
+        Product fuelCanister = new FuelCanister("Canister", new BigDecimal("100"), new Date());
+        Assert.assertThat(fuelCanister.getPriceWithTax(), Matchers.comparesEqualTo(new BigDecimal("128.56")));
+    }
+
+    @Test
+    public void testFuelTaxesAtEventDayHasOnlyExcise() throws Exception {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+        FuelCanister fuelCanister = new FuelCanister("Canister", new BigDecimal("100"), formatter.parse("26042020") );
+        Assert.assertThat(fuelCanister.getPriceWithTax(), Matchers.comparesEqualTo(new BigDecimal("105.56")));
+    }
 }
